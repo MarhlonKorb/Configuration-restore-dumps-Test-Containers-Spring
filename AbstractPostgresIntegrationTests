@@ -42,8 +42,8 @@ public abstract class AbstractPostgresIntegrationTests {
         firstDb.start();
         secondDb.start();
 
-        restoreBackup(firstDb, "db/migration/dump/database-name.backup");
-        restoreBackup(secondDb, "db/migration/dump/database-name-2.backup");
+        restoreBackup(firstDb, "db/migration/dump/first-db.backup");
+        restoreBackup(secondDb, "db/migration/dump/second-db.backup");
     }
 
     @AfterAll
@@ -90,14 +90,14 @@ public abstract class AbstractPostgresIntegrationTests {
     static void overrideProperties(DynamicPropertyRegistry registry) {
 
         // // First db config (principal)
-        registry.add("spring.datasource.url", rtDb::getJdbcUrl);
-        registry.add("spring.datasource.username", rtDb::getUsername);
-        registry.add("spring.datasource.password", rtDb::getPassword);
+        registry.add("spring.datasource.url", firstDb::getJdbcUrl);
+        registry.add("spring.datasource.username", firstDb::getUsername);
+        registry.add("spring.datasource.password", firstDb::getPassword);
 
         // Second db config
-        registry.add("spring.datasource-er.url", erDb::getJdbcUrl);
-        registry.add("spring.datasource-er.username", erDb::getUsername);
-        registry.add("spring.datasource-er.password", erDb::getPassword);
+        registry.add("spring.datasource-er.url", secondDb::getJdbcUrl);
+        registry.add("spring.datasource-er.username", secondDb::getUsername);
+        registry.add("spring.datasource-er.password", secondDb::getPassword);
 
         // Hardening
         // registry.add("spring.flyway.enabled", () -> "false");
